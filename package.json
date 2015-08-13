@@ -2,12 +2,19 @@
   "name": "generator-scala",
   "version": "0.1.0",
   "description": "generate scala projects",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "app/index.js",
+  "repository": "timvw/generator-scala",  
+  "author": {
+    "name": "Tim Van Wassenhove (ICTEAM BVBA)",
+    "email": "github@timvw.be",
+    "url": "http://www.timvw.be"
   },
-  "author": "Tim Van Wassenhove (ICTEAM bvba)",
   "license": "ISC",
+  "keywords": [
+    "yeoman-generator",
+    "scala",
+    "spark"
+  ],  
   "dependencies": {
     "yeoman-generator": "^0.20.2",
 	"mkdirp": "^0.5.1"
