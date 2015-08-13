@@ -1,0 +1,1 @@
+Scala scaffolding via Yeoman!
