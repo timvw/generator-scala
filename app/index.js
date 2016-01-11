@@ -61,13 +61,13 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
         this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath(this.applicationname + '/.gitignore'), this.templatedata);
         this.fs.copyTpl(this.templatePath('build.sbt'), this.destinationPath(this.applicationname + '/build.sbt'), this.templatedata);
 
-        mkdirp(this.destinationPath(this.applicationname + "/main/java"));		
-        mkdirp(this.destinationPath(this.applicationname + "/main/scala"));	
-        mkdirp(this.destinationPath(this.applicationname + "/main/resources"));	
+        mkdirp(this.destinationPath(this.applicationname + "/src/main/java"));
+        mkdirp(this.destinationPath(this.applicationname + "/src/main/scala"));
+        mkdirp(this.destinationPath(this.applicationname + "/src/main/resources"));
 
-        mkdirp(this.destinationPath(this.applicationname + "/test/java"));		
-        mkdirp(this.destinationPath(this.applicationname + "/test/scala"));	
-        mkdirp(this.destinationPath(this.applicationname + "/test/resources"));	
+        mkdirp(this.destinationPath(this.applicationname + "/src/test/java"));
+        mkdirp(this.destinationPath(this.applicationname + "/src/test/scala"));
+        mkdirp(this.destinationPath(this.applicationname + "/src/test/resources"));
 
         mkdirp(this.destinationPath(this.applicationname + "/lib"));
         mkdirp(this.destinationPath(this.applicationname + "/project"));
