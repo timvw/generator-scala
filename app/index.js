@@ -58,25 +58,26 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
     },
 
     writing: function() {
-        this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath(this.applicationname + '/.gitignore'), this.templatedata);
-        this.fs.copyTpl(this.templatePath('build.sbt'), this.destinationPath(this.applicationname + '/build.sbt'), this.templatedata);
+        this.destinationRoot(this.applicationname);
+        this.fs.copyTpl(this.templatePath('gitignore'), this.destinationPath('.gitignore'), this.templatedata);
+        this.fs.copyTpl(this.templatePath('build.sbt'), this.destinationPath('build.sbt'), this.templatedata);
 
-        mkdirp(this.destinationPath(this.applicationname + "/src/main/java"));
-        mkdirp(this.destinationPath(this.applicationname + "/src/main/scala"));
-        mkdirp(this.destinationPath(this.applicationname + "/src/main/resources"));
+        mkdirp(this.destinationPath("src/main/java"));
+        mkdirp(this.destinationPath("src/main/scala"));
+        mkdirp(this.destinationPath("src/main/resources"));
 
-        mkdirp(this.destinationPath(this.applicationname + "/src/test/java"));
-        mkdirp(this.destinationPath(this.applicationname + "/src/test/scala"));
-        mkdirp(this.destinationPath(this.applicationname + "/src/test/resources"));
+        mkdirp(this.destinationPath("src/test/java"));
+        mkdirp(this.destinationPath("src/test/scala"));
+        mkdirp(this.destinationPath("src/test/resources"));
 
-        mkdirp(this.destinationPath(this.applicationname + "/lib"));
-        mkdirp(this.destinationPath(this.applicationname + "/project"));
-        mkdirp(this.destinationPath(this.applicationname + "/target"));
+        mkdirp(this.destinationPath("lib"));
+        mkdirp(this.destinationPath("project"));
+        mkdirp(this.destinationPath("target"));
     },
 
     end: function() {
         this.log('\r\n');
-        this.log('Your application is now created in ' + this.destinationPath(this.applicationname + "/"));
+        this.log('Your application is now created in ' + this.destinationPath());
         this.log('\r\n');
     }
 });
