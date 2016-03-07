@@ -21,11 +21,6 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
         this.log(greeting);
         this.log('Welcome to the scala generator!');
 
-        this.templatedata = {
-            scalaversion : "2.10.4",
-            sparkversion : "1.4.1",
-        };
-
         if(this._applicationnameIsProvided()) this._setApplicationName(this._getApplicationName());
     },
 
@@ -43,16 +38,36 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
         this.templatedata.applicationname = name;
     },
 
-    askForApplicationName: function() {
+    prompting: function() {
+        this.templatedata = {
+            sparkversion : "1.4.1",
+        };
+
         var done = this.async();
         var prompts = [{
             name: 'applicationname',
             message: 'What is the name of your application?',
             default: this.applicationname,
             when: !this._applicationnameIsProvided()
+        },
+        {
+            type: 'list',
+            name: 'scalaversion',
+            message: 'Which version of Scala do you want to use?',
+            choices: [{
+                name: '2.10.4',
+                value: '2.10.4'
+            },
+            {
+                name: '2.11.7',
+                value: '2.11.7'
+            }],
+            default: '2.11.7'
         }];
+
         this.prompt(prompts, function(props) {
             if(!this._applicationnameIsProvided()) this._setApplicationName(props.applicationname);
+            this.templatedata.scalaversion = props.scalaversion
             done();
         }.bind(this));
     },
