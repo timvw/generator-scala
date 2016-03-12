@@ -59,10 +59,10 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
                 value: '2.10.4'
             },
             {
-                name: '2.11.7',
-                value: '2.11.7'
+                name: '2.11.8',
+                value: '2.11.8'
             }],
-            default: '2.11.7'
+            default: '2.11.8'
         }];
 
         this.prompt(prompts, function(props) {
