@@ -93,8 +93,6 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
     ACTION_CREATE_EMPTY_SOLUTION: 3,
     ACTION_ADD_REFERENCE_TO_PROJECT: 4,
 
-
-
     constructor: function() {
         yeoman.generators.Base.apply(this, arguments);
     },
@@ -252,6 +250,7 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
         }.bind(this));
     },
 
+/*
     askForPaket: function() {
         if (this.action === this.ACTION_ADD_REFERENCE_TO_PROJECT)
             return;
@@ -269,7 +268,9 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
         }.bind(this));
 
     },
+    */
 
+/*
     askForFake: function() {
         if (this.action === this.ACTION_ADD_REFERENCE_TO_PROJECT)
             return;
@@ -292,6 +293,7 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
 
         done();
     },
+    */
 
     _copy: function(dirPath, targetDirPath){
 
@@ -508,70 +510,8 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
             }
         }
 
-        if(this.paket) {
-            var bpath;
-            if(this.action !== this.ACTION_ADD_PROJECT_TO_SOLUTION) {
-                bpath = path.join(this.applicationName, ".paket", "paket.bootstrapper.exe" );
-            }
-            else {
-                bpath = path.join(".paket", "paket.bootstrapper.exe" );
-            }
-            var bootstrapper = this._execManaged(bpath, [], {});
 
-            bootstrapper.stdout.on('data', function (data) {
-                log(data.toString());
-            });
-
-            bootstrapper.on('close', function (code) {
-                var ppath;
-                var cpath;
-                if(action !== this.ACTION_ADD_PROJECT_TO_SOLUTION) {
-                    ppath = path.join(dest, appName, ".paket", "paket.exe" );
-                    cpath = path.join(dest, appName);
-                }
-                else {
-                    ppath = path.join(dest, ".paket", "paket.exe" );
-                    cpath = dest;
-                }
-                try{
-
-                log(cpath);
-                var paket = generator._execManaged(ppath, ['convert-from-nuget','-f'], {cwd: cpath});
-
-                paket.stdout.on('data', function (data) {
-                    log(data.toString());
-                });
-
-                paket.stdout.on('close', function (data) {
-                    var simplifiy = generator._execManaged(ppath, ['simplify'], {cwd: cpath});
-
-                    simplifiy.stdout.on('data', function (data) {
-                        log(data.toString());
-                    });
-                    simplifiy.stdout.on('close', function (data) {
-                        if (isfake) {
-                            var addFake = generator._execManaged(ppath, ['add', 'nuget', 'FAKE'], {cwd: cpath});
-
-                            addFake.stdout.on('close', function(data) {
-                                done();
-                            })
-                        }
-                        else {
-                            done();
-                        }
-                    });
-                });
-                }
-                catch(ex)
-                {
-                    log(ex);
-                }
-            });
-        }
-        else
-        {
-            done();
-        }
+        done();
     },
 
 
