@@ -1,6 +1,6 @@
 {
     "Templates": [
-        { "name": "Console Application", "value": "console" },
+        { "name": "Console Application", "value": "console" }
     ],
     "Files": [
         {"name": "F# Module", "value": "fs", "extension": "fs"},
