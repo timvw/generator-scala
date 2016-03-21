@@ -1,6 +1,5 @@
 {
     "Templates": [
-        { "name": "Console Application", "value": "console" },
         { "name": "Empty sbt application", "value": "emptysbt" }
     ],
     "Files": [
