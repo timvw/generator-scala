@@ -85,7 +85,7 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
 
     init: function() {
         this.log(greeting);
-        this.log('Welcome to the perfect ' + chalk.red('Scala') + ' generator!');
+        this.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
         this.templatedata = {};
         var done = this.async();
         var p = path.join(this.cacheRoot(), "sha")
@@ -93,27 +93,12 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
         this._getSHA(old, p, done);
     },
 
-    /*
-    askFor: function() {
-        var done = this.async();
-        var prompts = [{
-            type: 'list',
-            name: 'action',
-            message: 'What do You want to do?',
-            choices: [{"name": "Create standalone project", "value": this.ACTION_CREATE_STANDALONE_PROJECT},
-                      {"name": "Add new project to solution", "value": this.ACTION_ADD_PROJECT_TO_SOLUTION},
-                      {"name": "Create empty solution", "value": this.ACTION_CREATE_EMPTY_SOLUTION},
-                      {"name": "Add reference to project", "value": this.ACTION_ADD_REFERENCE_TO_PROJECT}
-                      ]
-        }];
-        this.prompt(prompts, function(props) {
-            this.action = props.action;
-            done();
-        }.bind(this));
-    },
-    */
-
     askForTemplate: function() {
+      if(this.args.length >= 1) {
+        this.type = this.args[0];
+        return;
+      }
+      else {
         var done = this.async();
 
         var p = path.join(this._getTemplateDirectory(), 'templates.json');
@@ -129,11 +114,13 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
             this.type = props.type;
             done();
         }.bind(this));
+      }
     },
 
     askForName: function() {
-      if(this.args.length >= 1) {
-        this.applicationName = this.args[0];
+      if(this.args.length >= 2) {
+        this.applicationName = this.args[1];
+        this.templatedata.applicationName = this.applicationName;
         return;
       }
 
@@ -146,13 +133,15 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
 
       this.prompt(prompts, function(props) {
           this.applicationName = props.applicationName;
+          this.templatedata.applicationName = this.applicationName;
           done();
       }.bind(this));
     },
 
     askForScalaVersion: function() {
-      if(this.args.length >= 2) {
-        this.scalaVersion = this.args[1];
+      if(this.args.length >= 3) {
+        this.scalaVersion = this.args[2];
+        this.templatedata.scalaVersion = this.scalaVersion;
         return;
       }
 
@@ -171,15 +160,12 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
 
         this.prompt(prompts, function(props) {
             this.scalaVersion = props.scalaVersion;
+            this.templatedata.scalaVersion = this.scalaVersion;
             done();
         }.bind(this));
     },
 
-
-
-/*
     _copy: function(dirPath, targetDirPath){
-
         var files = fs.readdirSync(dirPath);
         for(var i in files)
         {
@@ -196,38 +182,11 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
             }
         }
     },
-    */
 
-      /*
     writing: function() {
         var log = this.log;
         var p = path.join(this._getTemplateDirectory(), this.type);
         this._copy(p, this.applicationName);
-    },
-            */
-
-/*
-    install: function() {
-        var log = this.log
-        var done = this.async();
-        var appName = this.applicationName;
-        var action = this.action;
-        var dest = this.destinationRoot();
-        var isfake = this.fake;
-        var fs = this.fs;
-
-        var generator = this;
-
-        done();
-    },
-    */
-
-
-    summary: function() {
-      this.log('ready to create an application ' +
-        ' type: ' + this.type +
-        ' named: ' + this.applicationName +
-        ' scalaversion: ' + this.scalaVersion);
     },
 
     end: function() {
