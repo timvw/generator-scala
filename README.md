@@ -34,5 +34,12 @@ Finally, initiate the generator:
 yo scala
 ```
 
+In case you want to go fast, you can provide values for the requested parameters:
+
+```bash
+yo scala emptysbt foo 2.11.8
+```
+
+
 ### Maintainer(s)
 - [@timvw](https://github.com/timvw)
