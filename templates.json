@@ -1,6 +1,7 @@
 {
     "Templates": [
-        { "name": "Empty sbt application", "value": "emptysbt" }
+        { "name": "Empty sbt application", "value": "emptysbt" },
+        { "name": "Simple maven application", "value": "maven" }
     ],
     "Files": [
         {"name": "F# Module", "value": "fs", "extension": "fs"},
