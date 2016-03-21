@@ -2,6 +2,6 @@ name := "<%= applicationname %>"
 
 version := "1.0"
 
-scalaVersion := "<%= scalaversion %>"
+scalaVersion := "2.11.8"
 
-libraryDependencies += "org.apache.spark" %% "spark-core" % "<%= sparkversion %>"
+libraryDependencies += "org.apache.spark" %% "spark-core" % "1.6.1"
