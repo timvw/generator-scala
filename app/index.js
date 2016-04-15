@@ -4,6 +4,7 @@ var yosay = require('yosay');
 var chalk = require('chalk');
 var path = require('path');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 var uuid = require('uuid');
 var spawn = require('child_process').spawn;
 var spawnSync = require('child_process').spawnSync;
@@ -40,7 +41,7 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
 
     _saveSHA : function (p, sha, old) {
         if (!fs.existsSync(p)){
-            fs.mkdirParentSync(path.dirname(p));
+            mkdirp.sync(path.dirname(p));
         }
 
         if(old){
