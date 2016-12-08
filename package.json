@@ -18,8 +18,13 @@
   "dependencies": {
     "mkdirp": "^0.5.1",
     "request": "^2.71.0",
-    "yeoman-generator": "^0.22.5",
+    "yeoman-generator": "^0.24.1",
     "yosay": "^1.1.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
 }

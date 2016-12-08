@@ -19,90 +19,61 @@ var greeting =
   " |___/\___\__,_|_|\__,_|  \r\n" +
   "                          \r\n" ;
 
-var ScalaGenerator = yeoman.generators.NamedBase.extend({
-
-    username: 'timvw',
-    repo: 'generator-scala',
-    branch: 'templates',
+var ScalaGenerator = yeoman.Base.extend({
 
     constructor: function() {
-        yeoman.generators.Base.apply(this, arguments);
-    },
+        yeoman.Base.apply(this, arguments);
 
-    _download : function(t, done, reload) {
-        t.remote(t.username, t.repo, t.branch, function (err,r) {
-            done();
-        }, reload)
-    },
-
-    _getTemplateDirectory : function() {
-        return path.join(this.cacheRoot(), this.username, this.repo, this.branch);
-    },
-
-    _saveSHA : function (p, sha, old) {
-        if (!fs.existsSync(p)){
-            mkdirp.sync(path.dirname(p));
-        }
-
-        if(old){
-            fs.unlinkSync(p);
-        }
-        fs.appendFileSync(p, sha);
-    },
-
-    _checkSHA : function (t, p, sha, old, done) {
-        var oldsha = "";
-        if(old) oldsha = fs.readFileSync(p, 'utf8');
-        if(old && sha != oldsha) {
-            t._saveSHA(p, sha, true);
-            t._download(t, done, true)
-        }
-        else if (old && sha == oldsha) {
-            done();
-        }
-        else {
-            t._saveSHA(p, sha, false);
-            t._download(t, done, true);
-        }
-    },
-
-    _getSHA : function(old, p, done) {
-        var log = this.log;
-        var t = this;
-        var checkSHA = this._checkSHA;
-        var options = {
-            url: "https://api.github.com/repos/timvw/generator-scala/commits?sha=templates",
-            headers: {
-                'User-Agent': 'request'
-            }
-        };
-        request(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                var sha = JSON.parse(body)[0].sha;
-                checkSHA(t, p, sha, old, done);
-            }
-        });
+        // Next, add your custom code
+        //this.option('coffee'); // This method adds support for a `--coffee` flag
     },
 
     init: function() {
+        console.log("initializing......");
         this.log(greeting);
         this.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
         this.templatedata = {};
-        var done = this.async();
-        var p = path.join(this.cacheRoot(), "sha")
-        var old = fs.existsSync(p);
-        this._getSHA(old, p, done);
     },
 
     askForTemplate: function() {
-      if(this.args.length >= 1) {
+
+        this.log("the stuff will go to " + this.destinationRoot());
+        //  this.destinationPath('index.js');
+
+        //    this.sourceRoot();
+        // returns './templates'
+
+        //this.templatePath('index.js');
+        // returns './templates/index.js'
+
+        this.log("the templates are loaded from " + this.sourceRoot());
+
+        fs.readdir(this.sourceRoot(), function (err, files) {
+            if (err) {
+                throw err;
+            }
+
+            files.map(function (file) {
+                return path.join(p, file);
+            }).filter(function (file) {
+                return fs.statSync(file).isDirectory();
+            }).forEach(function (file) {
+                console.log("%s (%s)", file, path.extname(file));
+            });
+        });
+
+
+        if(this.args.length >= 1) {
         this.type = this.args[0];
         return;
       }
       else {
         var done = this.async();
 
-        var p = path.join(this._getTemplateDirectory(), 'templates.json');
+        this.log("now we need to figure out which templates there are...");
+
+
+          var p = path.join(this._getTemplateDirectory(), 'templates.json');
         var choices = JSON.parse(fs.readFileSync(p, "utf8"));
         var prompts = [{
             type: 'list',
@@ -186,8 +157,10 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
 
     writing: function() {
         var log = this.log;
-        var p = path.join(this._getTemplateDirectory(), this.type);
-        this._copy(p, this.applicationName);
+        this.log('we want to copy the data for ' + this.type);
+        // get the thingie and other thingie...
+        //var p = path.join(this._getTemplateDirectory(), this.type);
+        //this._copy(p, this.applicationName);
     },
 
     end: function() {
