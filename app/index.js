@@ -94,6 +94,11 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
         this._getSHA(old, p, done);
     },
 
+    _getSubDirectories: function(baseDir) {
+        return fs.readdirSync(baseDir)
+            .filter(function (file) { return fs.statSync(path.join(baseDir, file)).isDirectory(); });
+    },
+
     askForTemplate: function() {
       if(this.args.length >= 1) {
         this.type = this.args[0];
@@ -102,13 +107,15 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
       else {
         var done = this.async();
 
-        var p = path.join(this._getTemplateDirectory(), 'templates.json');
-        var choices = JSON.parse(fs.readFileSync(p, "utf8"));
+      var baseDir = this.sourceRoot();
+      var choices = this._getSubDirectories(baseDir)
+          .map(function (x) { return {name: x, value: x} });
+
         var prompts = [{
             type: 'list',
             name: 'type',
             message: 'What type of application do you want to create?',
-            choices: choices.Templates
+            choices: choices
         }];
 
         this.prompt(prompts, function(props) {
