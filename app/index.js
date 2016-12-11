@@ -37,7 +37,7 @@ var ScalaGenerator = yeoman.Base.extend({
 
     askForTemplate: function() {
         if(this.args.length >= 1) {
-            this.template = this.args[0];
+            this.templateName = this.args[0];
         } else {
             var done = this.async();
             var baseDir = this.sourceRoot();
@@ -46,13 +46,13 @@ var ScalaGenerator = yeoman.Base.extend({
 
             var prompts = [{
                 type: 'list',
-                name: 'template',
+                name: 'templateName',
                 message: 'What type of application do you want to create?',
                 choices: choices
             }];
 
             this.prompt(prompts, function(props) {
-                this.template = props.template;
+                this.templateName = props.templateName;
                 done();
             }.bind(this));
         }
@@ -64,13 +64,13 @@ var ScalaGenerator = yeoman.Base.extend({
         } else  {
             var done = this.async();
             var prompts = [{
-                name: 'name',
+                name: 'applicationName',
                 message: 'What\'s the name of your application?',
-                default: this.template
+                default: this.templateName
             }];
 
             this.prompt(prompts, function(props) {
-                this.name = props.name;
+                this.applicationName = props.applicationName;
                 done();
             }.bind(this));
         }
@@ -113,13 +113,16 @@ var ScalaGenerator = yeoman.Base.extend({
             }
             else {
                 var fn = path.join(targetDirPath.replace('ApplicationName', this.applicationName), f.replace('ApplicationName', this.applicationName));
-                this.template(fp,fn, this.templatedata);
+                this.template(fp, fn, this.templatedata);
             }
         }
     },
 
     writing: function() {
-        this.log("copying stuff, template: " + this.template + " name: " + this.name);
+        this.log("copying stuff, template: " + this.templateName + " name: " + this.applicationName);
+        this.templateData = { applicationName: this.applicationName, scalaVersion: this.scalaVersion  };
+        var p = path.join(this._getTemplateDirectory(), this.templateName);
+        this._copy(p, this.applicationName);
     },
 
     end: function() {
