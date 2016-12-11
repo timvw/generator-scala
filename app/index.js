@@ -100,50 +100,44 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
     },
 
     askForTemplate: function() {
-      if(this.args.length >= 1) {
-        this.type = this.args[0];
-        return;
-      }
-      else {
-        var done = this.async();
+        if(this.args.length >= 1) {
+            this.template = this.args[0];
+        } else {
+            var done = this.async();
+            var baseDir = this.sourceRoot();
+            var choices = this._getSubDirectories(baseDir)
+              .map(function (x) { return {name: x, value: x} });
 
-      var baseDir = this.sourceRoot();
-      var choices = this._getSubDirectories(baseDir)
-          .map(function (x) { return {name: x, value: x} });
+            var prompts = [{
+                type: 'list',
+                name: 'template',
+                message: 'What type of application do you want to create?',
+                choices: choices
+            }];
 
-        var prompts = [{
-            type: 'list',
-            name: 'type',
-            message: 'What type of application do you want to create?',
-            choices: choices
-        }];
-
-        this.prompt(prompts, function(props) {
-            this.type = props.type;
-            done();
-        }.bind(this));
-      }
+            this.prompt(prompts, function(props) {
+                this.template = props.template;
+                done();
+            }.bind(this));
+        }
     },
 
     askForName: function() {
-      if(this.args.length >= 2) {
-        this.applicationName = this.args[1];
-        this.templatedata.applicationName = this.applicationName;
-        return;
-      }
+        if(this.args.length >= 2) {
+            this.applicationName = this.args[1];
+        } else  {
+            var done = this.async();
+            var prompts = [{
+                name: 'name',
+                message: 'What\'s the name of your application?',
+                default: this.template
+            }];
 
-      var done = this.async();
-      var prompts = [{
-          name: 'applicationName',
-          message: 'What\'s the name of your application?',
-          default: this.type
-      }];
-
-      this.prompt(prompts, function(props) {
-          this.applicationName = props.applicationName;
-          this.templatedata.applicationName = this.applicationName;
-          done();
-      }.bind(this));
+            this.prompt(prompts, function(props) {
+                this.name = props.name;
+                done();
+            }.bind(this));
+        }
     },
 
     askForScalaVersion: function() {
@@ -192,9 +186,7 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
     },
 
     writing: function() {
-        var log = this.log;
-        var p = path.join(this._getTemplateDirectory(), this.type);
-        this._copy(p, this.applicationName);
+        this.log("copying stuff, template: " + this.template + " name: " + this.name);
     },
 
     end: function() {
