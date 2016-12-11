@@ -113,15 +113,14 @@ var ScalaGenerator = yeoman.Base.extend({
             }
             else {
                 var fn = path.join(targetDirPath.replace('ApplicationName', this.applicationName), f.replace('ApplicationName', this.applicationName));
-                this.template(fp, fn, this.templatedata);
+                this.template(fp, fn, this.templateData);
             }
         }
     },
 
     writing: function() {
-        this.log("copying stuff, template: " + this.templateName + " name: " + this.applicationName);
         this.templateData = { applicationName: this.applicationName, scalaVersion: this.scalaVersion  };
-        var p = path.join(this._getTemplateDirectory(), this.templateName);
+        var p = path.join(this.sourceRoot(), this.templateName);
         this._copy(p, this.applicationName);
     },
 
