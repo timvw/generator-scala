@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>be.icteam.scalagenerator</groupId>
+    <groupId>be.icteam.quickstart</groupId>
     <artifactId><%= applicationName %></artifactId>
     <packaging>pom</packaging>
-    <version>1.0-NAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,7 +20,7 @@
             <dependency>
                 <groupId>org.scala-lang</groupId>
                 <artifactId>scala-library</artifactId>
-                <version><%= scalaVersion %></version>
+                <version>${scala.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
