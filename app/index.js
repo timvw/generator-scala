@@ -21,77 +21,13 @@ var greeting =
 
 var ScalaGenerator = yeoman.generators.NamedBase.extend({
 
-    username: 'timvw',
-    repo: 'generator-scala',
-    branch: 'templates',
-
     constructor: function() {
         yeoman.generators.Base.apply(this, arguments);
-    },
-
-    _download : function(t, done, reload) {
-        t.remote(t.username, t.repo, t.branch, function (err,r) {
-            done();
-        }, reload)
-    },
-
-    _getTemplateDirectory : function() {
-        return path.join(this.cacheRoot(), this.username, this.repo, this.branch);
-    },
-
-    _saveSHA : function (p, sha, old) {
-        if (!fs.existsSync(p)){
-            mkdirp.sync(path.dirname(p));
-        }
-
-        if(old){
-            fs.unlinkSync(p);
-        }
-        fs.appendFileSync(p, sha);
-    },
-
-    _checkSHA : function (t, p, sha, old, done) {
-        var oldsha = "";
-        if(old) oldsha = fs.readFileSync(p, 'utf8');
-        if(old && sha != oldsha) {
-            t._saveSHA(p, sha, true);
-            t._download(t, done, true)
-        }
-        else if (old && sha == oldsha) {
-            done();
-        }
-        else {
-            t._saveSHA(p, sha, false);
-            t._download(t, done, true);
-        }
-    },
-
-    _getSHA : function(old, p, done) {
-        var log = this.log;
-        var t = this;
-        var checkSHA = this._checkSHA;
-        var options = {
-            url: "https://api.github.com/repos/timvw/generator-scala/commits?sha=templates",
-            headers: {
-                'User-Agent': 'request'
-            }
-        };
-        request(options, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                var sha = JSON.parse(body)[0].sha;
-                checkSHA(t, p, sha, old, done);
-            }
-        });
     },
 
     init: function() {
         this.log(greeting);
         this.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
-        this.templatedata = {};
-        var done = this.async();
-        var p = path.join(this.cacheRoot(), "sha")
-        var old = fs.existsSync(p);
-        this._getSHA(old, p, done);
     },
 
     _getSubDirectories: function(baseDir) {
@@ -143,28 +79,25 @@ var ScalaGenerator = yeoman.generators.NamedBase.extend({
     askForScalaVersion: function() {
       if(this.args.length >= 3) {
         this.scalaVersion = this.args[2];
-        this.templatedata.scalaVersion = this.scalaVersion;
-        return;
+      } else {
+          var done = this.async();
+          var prompts = [{
+              type: 'list',
+              name: 'scalaversion',
+              message: 'Which version of Scala do you want to use?',
+              choices: [
+                  {name: '2.10.4', value: '2.10.4'},
+                  {name: '2.10.5', value: '2.10.5'},
+                  {name: '2.11.7', value: '2.11.7'},
+                  {name: '2.11.8', value: '2.11.8'}],
+              default: '2.11.8'
+          }];
+
+          this.prompt(prompts, function (props) {
+              this.scalaVersion = props.scalaVersion;
+              done();
+          }.bind(this));
       }
-
-      var done = this.async();
-      var prompts = [{
-            type: 'list',
-            name: 'scalaversion',
-            message: 'Which version of Scala do you want to use?',
-            choices: [
-              { name: '2.10.4', value: '2.10.4' },
-              { name: '2.10.5', value: '2.10.5' },
-              { name: '2.11.7', value: '2.11.7' },
-              { name: '2.11.8', value: '2.11.8' }],
-            default: '2.11.8'
-        }];
-
-        this.prompt(prompts, function(props) {
-            this.scalaVersion = props.scalaVersion;
-            this.templatedata.scalaVersion = this.scalaVersion;
-            done();
-        }.bind(this));
     },
 
     _copy: function(dirPath, targetDirPath){
