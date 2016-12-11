@@ -19,10 +19,10 @@ var greeting =
   " |___/\___\__,_|_|\__,_|  \r\n" +
   "                          \r\n" ;
 
-var ScalaGenerator = yeoman.generators.NamedBase.extend({
+var ScalaGenerator = yeoman.Base.extend({
 
     constructor: function() {
-        yeoman.generators.Base.apply(this, arguments);
+        yeoman.Base.apply(this, arguments);
     },
 
     init: function() {
