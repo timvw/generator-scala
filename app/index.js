@@ -6,8 +6,6 @@ var path = require('path');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var uuid = require('uuid');
-var spawn = require('child_process').spawn;
-var spawnSync = require('child_process').spawnSync;
 var request = require('request');
 
 var greeting =
