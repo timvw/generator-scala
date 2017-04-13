@@ -81,7 +81,7 @@ var ScalaGenerator = yeoman.Base.extend({
           var done = this.async();
           var prompts = [{
               type: 'list',
-              name: 'scalaversion',
+              name: 'scalaVersion',
               message: 'Which version of Scala do you want to use?',
               choices: [
                   {name: '2.10.4', value: '2.10.4'},
