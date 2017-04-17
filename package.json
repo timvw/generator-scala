@@ -2,7 +2,7 @@
   "name": "generator-scala",
   "version": "0.55555.0",
   "description": "generate scala projects",
-  "main": "app/index.js",
+  "main": "generators/app/index.js",
   "repository": "timvw/generator-scala",
   "author": {
     "name": "Tim Van Wassenhove (ICTEAM BVBA)",
@@ -13,7 +13,10 @@
   "keywords": [
     "yeoman-generator",
     "scala",
-    "spark"
+    "spark",
+    "maven",
+    "sbt",
+    "gradle"
   ],
   "dependencies": {
     "mkdirp": "^0.5.1",
