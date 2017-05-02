@@ -23,9 +23,21 @@ var greeting =
   " |___/\___\__,_|_|\__,_|  \r\n" +
   "                          \r\n" ;
 
-class ScalaGenerator extends Generator {
+module.exports = class extends Generator {
 
-    init() {
+    constructor(args, opts) {
+        super(args, opts);
+        this.option('templateName', { type: String });
+        this.option('appName', { type: String });
+        this.option('scalaVersion', { type: String });
+    }
+
+    initializing() {
+        this._printBanner();
+        this._askForSubgenerator();
+    }
+
+    _printBanner() {
         console.log(greeting);
         console.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
     }
@@ -37,13 +49,16 @@ class ScalaGenerator extends Generator {
             });
     }
 
-    askForTemplate() {
+    _askForSubgenerator() {
+        var done = this.async();
+
         if (this.args.length >= 1) {
             this.templateName = this.args[0];
+            done();
         } else {
-            var done = this.async();
+
             var baseDir = this.sourceRoot();
-            var choices = this._getSubDirectories(baseDir  + "/../../")
+            var availableSubgenerators = this._getSubDirectories(baseDir  + "/../../")
                 .filter(function (x) {
                     return x != "app"
                 })
@@ -55,17 +70,20 @@ class ScalaGenerator extends Generator {
                 type: 'list',
                 name: 'templateName',
                 message: 'What type of application do you want to create?',
-                choices: choices
+                choices: availableSubgenerators,
+                store: true
             }];
 
-            this.prompt(prompts, function (props) {
-                this.templateName = props.templateName;
+            this.prompt(prompts).then((answers) => {
+                this.composeWith(require.resolve('../' + answers.templateName));
                 done();
-            }.bind(this));
+            });
         }
+
+        return done;
     }
 
-    askForName() {
+    _askForName() {
         if (this.args.length >= 2) {
             this.applicationName = this.args[1];
         } else {
@@ -83,11 +101,14 @@ class ScalaGenerator extends Generator {
         }
     }
 
-    askForScalaVersion() {
+    _askForScalaVersion() {
+        var done = this.async();
+
         if (this.args.length >= 3) {
             this.scalaVersion = this.args[2];
+            done();
         } else {
-            var done = this.async();
+
             var prompts = [{
                 type: 'list',
                 name: 'scalaVersion',
@@ -103,8 +124,10 @@ class ScalaGenerator extends Generator {
             this.prompt(prompts, function (props) {
                 this.scalaVersion = props.scalaVersion;
                 done();
-            }.bind(this));
+            });
         }
+
+        return done;
     }
 
     _copy(dirPath, targetDirPath) {
@@ -124,17 +147,15 @@ class ScalaGenerator extends Generator {
         }
     }
 
-    writing() {
+    _writing() {
         this.templateData = {applicationName: this.applicationName, scalaVersion: this.scalaVersion};
         var p = path.join(this.sourceRoot(), this.templateName);
         this._copy(p, this.applicationName);
     }
 
-    end() {
+    _end() {
         this.log('\r\n');
         this.log('Your project is now created');
         this.log('\r\n');
     }
-}
-
-module.exports = ScalaGenerator;
+};

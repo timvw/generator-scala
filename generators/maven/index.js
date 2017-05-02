@@ -1,21 +1,27 @@
 'use strict';
 
-var ScalaGenerator = require('../app/index');
+var ScalaGenerator = require('../app');
 var _ = require('lodash');
 
-class ScalaMavenGenerator extends ScalaGenerator {
+module.exports = class extends ScalaGenerator {
 
     constructor(args, opts) {
         super(args, opts);
-        console.log("running constructor...");
-        this.option('appname', { type: String })
-        this.option('scalaversion', { type: String });
+        console.log("running constructor in scalamavengenerator...");
+    }
 
-        this.sayHi();
+    initializing() {
+        console.log("running maven init...")
     }
 
     prompting() {
+        console.log("running the maven prompt");
+        this._askForScalaVersion();
+    }
+
+    _prompting() {
       var done = this.async();
+
       var prompts = [];
 
       if(!this.options.appname) {
@@ -54,11 +60,9 @@ class ScalaMavenGenerator extends ScalaGenerator {
       }
     }
 
-    configuring() {
+    _configuring() {
       this.log("by now the appname is " + this.options.appname);
       this.log("by now the scalaversion is " + this.options.scalaversion);
     }
 
-}
-
-module.exports = ScalaMavenGenerator;
+};
