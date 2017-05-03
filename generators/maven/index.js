@@ -6,7 +6,7 @@ module.exports = class extends Common {
 
     constructor(args, opts) {
         super(args, opts);
-        this.argument('appName', { type: String, required: false });
+        this.argument('applicationName', { type: String, required: false });
         this.argument('scalaVersion', { type: String, required: false });
         console.log("the provided appname: " + opts['appName']);
         console.log("the provided appname: " + opts['scalaVersion']);
@@ -26,21 +26,25 @@ module.exports = class extends Common {
 
         var prompts = [];
 
+        if(!this.options['applicationName']) {
+            prompts.push(this.getApplicationNamePrompt());
+        }
+
         if(!this.options['scalaVersion']) {
             prompts.push(this.getScalaVersionPrompt());
         }
 
         return this.prompt(prompts).then((answers) => {
+            if(answers.applicationName) {
+                this.options['applicationName'] = answers.applicationName;
+            }
             if(answers.scalaVersion) {
                 this.options['scalaVersion'] = answers.scalaVersion;
-                console.log("assigned scala version while processing prompt result");
             }
             console.log("processed result");
             console.log("final scala version: " + this.options['scalaVersion']);
+            console.log("final application name: " + this.option['applicationName']);
         });
-
-        //return done; we do not get here...
-        console.log("done prompting...");
     }
 
     writing() {

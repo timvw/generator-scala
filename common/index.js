@@ -31,6 +31,17 @@ module.exports = class extends Generator {
         return prompt;
     }
 
+    getApplicationNamePrompt() {
+
+        var prompt = {
+            name: 'applicationName',
+            message: 'What\'s the name of your application?',
+            default: this.appname
+        };
+
+        return prompt;
+    }
+
     askForScalaVersion() {
         var done = this.async();
 
@@ -73,7 +84,7 @@ module.exports = class extends Generator {
             var prompts = [{
                 name: 'applicationName',
                 message: 'What\'s the name of your application?',
-                default: this.templateName
+                default: this.appname
             }];
 
             this.prompt(prompts, function (props) {
