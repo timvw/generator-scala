@@ -1,8 +1,8 @@
 'use strict';
-var Generator = require('yeoman-generator');
-var chalk = require('chalk');
-var fs = require('fs');
-var path = require('path');
+const Common = require('../../common');
+const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
 
 /*
 var yosay = require('yosay');
@@ -14,7 +14,7 @@ var uuid = require('uuid');
 var request = require('request');
 */
 
-var greeting =
+const greeting =
   "                          \r\n" +
   "                _         \r\n" +
   "  ___  ___ __ _| | __ _   \r\n" +
@@ -23,13 +23,15 @@ var greeting =
   " |___/\___\__,_|_|\__,_|  \r\n" +
   "                          \r\n" ;
 
-module.exports = class extends Generator {
+module.exports = class extends Common {
 
     constructor(args, opts) {
         super(args, opts);
-        this.option('templateName', { type: String });
-        this.option('appName', { type: String });
-        this.option('scalaVersion', { type: String });
+        console.log("setting arguments...");
+        //yo scala emptysbt foo 2.11.8
+        this.argument('templateName', { desc: 'the name of the template to use', type: String, required: false });
+        this.argument('appName', { type: String, required: false });
+        this.argument('scalaVersion', { type: String, required: false });
     }
 
     initializing() {
@@ -42,23 +44,17 @@ module.exports = class extends Generator {
         console.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
     }
 
-    _getSubDirectories(baseDir) {
-        return fs.readdirSync(baseDir)
-            .filter(function (file) {
-                return fs.statSync(path.join(baseDir, file)).isDirectory();
-            });
-    }
-
     _askForSubgenerator() {
         var done = this.async();
 
         if (this.args.length >= 1) {
             this.templateName = this.args[0];
+            this._addSubgenerator(this.templateName, this.opts);
             done();
         } else {
 
             var baseDir = this.sourceRoot();
-            var availableSubgenerators = this._getSubDirectories(baseDir  + "/../../")
+            var availableSubgenerators = this.getSubDirectories(baseDir  + "/../../")
                 .filter(function (x) {
                     return x != "app"
                 })
@@ -75,7 +71,7 @@ module.exports = class extends Generator {
             }];
 
             this.prompt(prompts).then((answers) => {
-                this.composeWith(require.resolve('../' + answers.templateName));
+                this._addSubgenerator(answers.templateName, this.opts);
                 done();
             });
         }
@@ -83,51 +79,8 @@ module.exports = class extends Generator {
         return done;
     }
 
-    _askForName() {
-        if (this.args.length >= 2) {
-            this.applicationName = this.args[1];
-        } else {
-            var done = this.async();
-            var prompts = [{
-                name: 'applicationName',
-                message: 'What\'s the name of your application?',
-                default: this.templateName
-            }];
-
-            this.prompt(prompts, function (props) {
-                this.applicationName = props.applicationName;
-                done();
-            }.bind(this));
-        }
-    }
-
-    _askForScalaVersion() {
-        var done = this.async();
-
-        if (this.args.length >= 3) {
-            this.scalaVersion = this.args[2];
-            done();
-        } else {
-
-            var prompts = [{
-                type: 'list',
-                name: 'scalaVersion',
-                message: 'Which version of Scala do you want to use?',
-                choices: [
-                    {name: '2.10.4', value: '2.10.4'},
-                    {name: '2.10.5', value: '2.10.5'},
-                    {name: '2.11.7', value: '2.11.7'},
-                    {name: '2.11.8', value: '2.11.8'}],
-                default: '2.11.8'
-            }];
-
-            this.prompt(prompts, function (props) {
-                this.scalaVersion = props.scalaVersion;
-                done();
-            });
-        }
-
-        return done;
+    _addSubgenerator(name, opts) {
+        this.composeWith(require.resolve('../' + name, opts));
     }
 
     _copy(dirPath, targetDirPath) {

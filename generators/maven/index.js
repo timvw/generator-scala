@@ -1,13 +1,15 @@
 'use strict';
 
-var ScalaGenerator = require('../app');
-var _ = require('lodash');
+const Common = require('../../common');
 
-module.exports = class extends ScalaGenerator {
+module.exports = class extends Common {
 
     constructor(args, opts) {
         super(args, opts);
-        console.log("running constructor in scalamavengenerator...");
+        this.argument('appName', { type: String, required: false });
+        this.argument('scalaVersion', { type: String, required: false });
+        console.log("the provided appname: " + opts['appName']);
+        console.log("the provided appname: " + opts['scalaVersion']);
     }
 
     initializing() {
@@ -15,8 +17,34 @@ module.exports = class extends ScalaGenerator {
     }
 
     prompting() {
+        //var done = this.async();
+
         console.log("running the maven prompt");
-        this._askForScalaVersion();
+        console.log("current the appname is: " + this.options.appName);
+        //var task1 = this.askForScalaVersion();
+        //task1.then((result) => { this.askForName()});
+
+        var prompts = [];
+
+        if(!this.options['scalaVersion']) {
+            prompts.push(this.getScalaVersionPrompt());
+        }
+
+        return this.prompt(prompts).then((answers) => {
+            if(answers.scalaVersion) {
+                this.options['scalaVersion'] = answers.scalaVersion;
+                console.log("assigned scala version while processing prompt result");
+            }
+            console.log("processed result");
+            console.log("final scala version: " + this.options['scalaVersion']);
+        });
+
+        //return done; we do not get here...
+        console.log("done prompting...");
+    }
+
+    writing() {
+        console.log("writing...");
     }
 
     _prompting() {
