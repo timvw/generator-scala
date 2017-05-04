@@ -14,14 +14,6 @@ var uuid = require('uuid');
 var request = require('request');
 */
 
-const greeting =
-  "                          \r\n" +
-  "                _         \r\n" +
-  "  ___  ___ __ _| | __ _   \r\n" +
-  " / __|/ __/ _` | |/ _` |  \r\n" +
-  " \__ \ (_| (_| | | (_| |  \r\n" +
-  " |___/\___\__,_|_|\__,_|  \r\n" +
-  "                          \r\n" ;
 
 module.exports = class extends Common {
 
@@ -30,26 +22,20 @@ module.exports = class extends Common {
         console.log("setting arguments...");
         //yo scala emptysbt foo 2.11.8
         this.argument('templateName', { desc: 'the name of the template to use', type: String, required: false });
-        this.argument('appName', { type: String, required: false });
+        this.argument('applicationName', { type: String, required: false });
         this.argument('scalaVersion', { type: String, required: false });
     }
 
     initializing() {
-        this._printBanner();
-        this._askForSubgenerator();
-    }
 
-    _printBanner() {
-        console.log(greeting);
+        console.log(this.getGreeting());
         console.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
-    }
 
-    _askForSubgenerator() {
         var done = this.async();
 
         if (this.args.length >= 1) {
             this.templateName = this.args[0];
-            this._addSubgenerator(this.templateName, this.opts);
+            this._addSubgenerator(this.templateName, this.options);
             done();
         } else {
 
@@ -71,7 +57,7 @@ module.exports = class extends Common {
             }];
 
             this.prompt(prompts).then((answers) => {
-                this._addSubgenerator(answers.templateName, this.opts);
+                this._addSubgenerator(answers.templateName, this.options);
                 done();
             });
         }
@@ -81,34 +67,5 @@ module.exports = class extends Common {
 
     _addSubgenerator(name, opts) {
         this.composeWith(require.resolve('../' + name, opts));
-    }
-
-    _copy(dirPath, targetDirPath) {
-        var files = fs.readdirSync(dirPath);
-        for (var i in files) {
-            var f = files[i];
-            var fp = path.join(dirPath, f);
-            this.log(f);
-            if (fs.statSync(fp).isDirectory()) {
-                var newTargetPath = path.join(targetDirPath, f);
-                this._copy(fp, newTargetPath);
-            }
-            else {
-                var fn = path.join(targetDirPath.replace('ApplicationName', this.applicationName), f.replace('ApplicationName', this.applicationName));
-                this.template(fp, fn, this.templateData);
-            }
-        }
-    }
-
-    _writing() {
-        this.templateData = {applicationName: this.applicationName, scalaVersion: this.scalaVersion};
-        var p = path.join(this.sourceRoot(), this.templateName);
-        this._copy(p, this.applicationName);
-    }
-
-    _end() {
-        this.log('\r\n');
-        this.log('Your project is now created');
-        this.log('\r\n');
     }
 };
