@@ -23,18 +23,13 @@ module.exports = class extends Generator {
     }
 
     getApplicationNameParameterName() { return 'applicationName'; }
-    getScalaVersionParamterName() { return 'scalaVersion'; }
+    getScalaVersionParameterName() { return 'scalaVersion'; }
 
-    getSubDirectories(baseDir) {
-        return fs.readdirSync(baseDir)
-            .filter(function (file) {
-                return fs.statSync(path.join(baseDir, file)).isDirectory();
-            });
-    }
+
 
     getScalaVersionPrompt() {
 
-        var prompt = {
+        const prompt = {
             type: 'list',
             name: 'scalaVersion',
             message: 'Which version of Scala do you want to use?',
@@ -53,49 +48,12 @@ module.exports = class extends Generator {
 
     getApplicationNamePrompt() {
 
-        var prompt = {
+        const prompt = {
             name: 'applicationName',
             message: 'What\'s the name of your application?',
             default: this.appname
         };
 
         return prompt;
-    }
-
-    /*
-     this.fs.copyTpl(
-     this.templatePath('index.html'),
-     this.destinationPath('public/index.html'),
-     { title: 'Templating with Yeoman' }
-     );
-     */
-
-    copy(sourceDir, targetDir) {
-        var files = fs.readdirSync(sourceDir);
-        for (var i in files) {
-            var f = files[i];
-            var fp = path.join(sourceDir, f);
-            this.log(f);
-            if (fs.statSync(fp).isDirectory()) {
-                var newTargetPath = path.join(targetDir, f);
-                this._copy(fp, newTargetPath);
-            }
-            else {
-                var fn = path.join(targetDir.replace('ApplicationName', this.applicationName), f.replace('ApplicationName', this.applicationName));
-                this.template(fp, fn, this.templateData);
-            }
-        }
-    }
-
-    _writing() {
-        this.templateData = {applicationName: this.applicationName, scalaVersion: this.scalaVersion};
-        var p = path.join(this.sourceRoot(), this.templateName);
-        this._copy(p, this.applicationName);
-    }
-
-    _end() {
-        this.log('\r\n');
-        this.log('Your project is now created');
-        this.log('\r\n');
     }
 };

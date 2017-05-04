@@ -1,5 +1,6 @@
 'use strict';
 
+const Generator = require('yeoman-generator');
 const Common = require('../../common');
 
 module.exports = class extends Common {
@@ -7,7 +8,7 @@ module.exports = class extends Common {
     constructor(args, opts) {
         super(args, opts);
         this.argument(this.getApplicationNameParameterName(), { type: String, required: false });
-        this.argument(this.getScalaVersionParamterName(), { type: String, required: false });
+        this.argument(this.getScalaVersionParameterName(), { type: String, required: false });
     }
 
     prompting() {
@@ -18,7 +19,7 @@ module.exports = class extends Common {
             prompts.push(this.getApplicationNamePrompt());
         }
 
-        if(!this.options[this.getScalaVersionParamterName()]) {
+        if(!this.options[this.getScalaVersionParameterName()]) {
             prompts.push(this.getScalaVersionPrompt());
         }
 
@@ -28,8 +29,8 @@ module.exports = class extends Common {
                 this.options[this.getApplicationNameParameterName()] = answers[this.getApplicationNameParameterName()];
             }
 
-            if(answers[this.getScalaVersionParamterName()]) {
-                this.options[this.getScalaVersionParamterName()] = answers[this.getScalaVersionParamterName()];
+            if(answers[this.getScalaVersionParameterName()]) {
+                this.options[this.getScalaVersionParameterName()] = answers[this.getScalaVersionParameterName()];
             }
         });
     }

@@ -1,39 +1,28 @@
 'use strict';
+const Generator = require('yeoman-generator');
 const Common = require('../../common');
 const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 
-/*
-var yosay = require('yosay');
-
-
-
-var mkdirp = require('mkdirp');
-var uuid = require('uuid');
-var request = require('request');
-*/
-
-
 module.exports = class extends Common {
 
     constructor(args, opts) {
         super(args, opts);
+        this.timarguments = args;
         this.argument('templateName', { desc: 'the name of the template to use', type: String, required: false });
-        this.argument('applicationName', { type: String, required: false });
-        this.argument('scalaVersion', { type: String, required: false });
     }
 
     initializing() {
 
-        console.log(this.getGreeting());
-        console.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
+        this.log(this.getGreeting());
+        this.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
 
         var done = this.async();
 
-        if (this.args.length >= 1) {
-            this.templateName = this.args[0];
-            this._addSubgenerator(this.templateName, this.options);
+        if(this.options['templateName']) {
+            //this.templateName = this.args[0];
+            //this._addSubgenerator(this.templateName, this.options);
             done();
         } else {
 
@@ -55,7 +44,8 @@ module.exports = class extends Common {
             }];
 
             this.prompt(prompts).then((answers) => {
-                this._addSubgenerator(answers.templateName, this.options);
+                //this._addSubgenerator(answers.templateName, this.options);
+                this.options['templateName'] = answers.templateName;
                 done();
             });
         }
@@ -63,7 +53,20 @@ module.exports = class extends Common {
         return done;
     }
 
+    _getSubDirectories(baseDir) {
+        return fs.readdirSync(baseDir)
+            .filter(function (file) {
+                return fs.statSync(path.join(baseDir, file)).isDirectory();
+            });
+    }
+
+    configuring() {
+        this._addSubgenerator(this.options['templateName'], this.options);
+    }
+
     _addSubgenerator(name, opts) {
-        this.composeWith(require.resolve('../' + name, opts));
+        this.log('composing with subgenerator: ' + name + ' and opts: ' + opts);
+        var z = { options: opts, arguments: this.timarguments };
+        this.composeWith(require.resolve('../' + name), z);
     }
 };
