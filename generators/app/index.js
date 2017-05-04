@@ -19,8 +19,6 @@ module.exports = class extends Common {
 
     constructor(args, opts) {
         super(args, opts);
-        console.log("setting arguments...");
-        //yo scala emptysbt foo 2.11.8
         this.argument('templateName', { desc: 'the name of the template to use', type: String, required: false });
         this.argument('applicationName', { type: String, required: false });
         this.argument('scalaVersion', { type: String, required: false });
@@ -40,9 +38,9 @@ module.exports = class extends Common {
         } else {
 
             var baseDir = this.sourceRoot();
-            var availableSubgenerators = this.getSubDirectories(baseDir  + "/../../")
+            var availableSubgenerators = this.getSubDirectories(baseDir  + '/../../')
                 .filter(function (x) {
-                    return x != "app"
+                    return x != 'app'
                 })
                 .map(function (x) {
                     return {name: x, value: x}
@@ -66,6 +64,6 @@ module.exports = class extends Common {
     }
 
     _addSubgenerator(name, opts) {
-        this.composeWith(require.resolve('../' + name, opts));
+
     }
 };

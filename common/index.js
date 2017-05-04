@@ -22,6 +22,9 @@ module.exports = class extends Generator {
         return greeting;
     }
 
+    getApplicationNameParameterName() { return 'applicationName'; }
+    getScalaVersionParamterName() { return 'scalaVersion'; }
+
     getSubDirectories(baseDir) {
         return fs.readdirSync(baseDir)
             .filter(function (file) {
@@ -59,18 +62,26 @@ module.exports = class extends Generator {
         return prompt;
     }
 
-    copy(dirPath, targetDirPath) {
-        var files = fs.readdirSync(dirPath);
+    /*
+     this.fs.copyTpl(
+     this.templatePath('index.html'),
+     this.destinationPath('public/index.html'),
+     { title: 'Templating with Yeoman' }
+     );
+     */
+
+    copy(sourceDir, targetDir) {
+        var files = fs.readdirSync(sourceDir);
         for (var i in files) {
             var f = files[i];
-            var fp = path.join(dirPath, f);
+            var fp = path.join(sourceDir, f);
             this.log(f);
             if (fs.statSync(fp).isDirectory()) {
-                var newTargetPath = path.join(targetDirPath, f);
+                var newTargetPath = path.join(targetDir, f);
                 this._copy(fp, newTargetPath);
             }
             else {
-                var fn = path.join(targetDirPath.replace('ApplicationName', this.applicationName), f.replace('ApplicationName', this.applicationName));
+                var fn = path.join(targetDir.replace('ApplicationName', this.applicationName), f.replace('ApplicationName', this.applicationName));
                 this.template(fp, fn, this.templateData);
             }
         }

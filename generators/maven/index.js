@@ -6,35 +6,36 @@ module.exports = class extends Common {
 
     constructor(args, opts) {
         super(args, opts);
-        this.argument('applicationName', { type: String, required: false });
-        this.argument('scalaVersion', { type: String, required: false });
+        this.argument(this.getApplicationNameParameterName(), { type: String, required: false });
+        this.argument(this.getScalaVersionParamterName(), { type: String, required: false });
     }
 
     prompting() {
+
         var prompts = [];
 
-        if(!this.options['applicationName']) {
+        if(!this.options[this.getApplicationNameParameterName()]) {
             prompts.push(this.getApplicationNamePrompt());
         }
 
-        if(!this.options['scalaVersion']) {
+        if(!this.options[this.getScalaVersionParamterName()]) {
             prompts.push(this.getScalaVersionPrompt());
         }
 
         return this.prompt(prompts).then((answers) => {
 
-            if(answers.applicationName) {
-                this.options['applicationName'] = answers.applicationName;
+            if(answers[this.getApplicationNameParameterName()]) {
+                this.options[this.getApplicationNameParameterName()] = answers[this.getApplicationNameParameterName()];
             }
 
-            if(answers.scalaVersion) {
-                this.options['scalaVersion'] = answers.scalaVersion;
+            if(answers[this.getScalaVersionParamterName()]) {
+                this.options[this.getScalaVersionParamterName()] = answers[this.getScalaVersionParamterName()];
             }
         });
     }
 
     writing() {
-        console.log("writing...");
+        this.fs.copyTpl( this.templatePath('**/*'), this.destinationRoot(), this.options);
     }
 
 };
