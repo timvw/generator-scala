@@ -9,64 +9,61 @@ module.exports = class extends Common {
 
     constructor(args, opts) {
         super(args, opts);
-        this.timarguments = args;
-        this.argument('templateName', { desc: 'the name of the template to use', type: String, required: false });
+        this.argument(this._getSubgeneratorsParameterName(), { desc: 'the name of the subgenerator to use', type: String, required: false });
     }
 
     initializing() {
 
-        this.log(this.getGreeting());
-        this.log('Welcome to the ' + chalk.red('Scala') + ' generator!');
+        var prompts = [];
 
-        var done = this.async();
-
-        if(this.options['templateName']) {
-            //this.templateName = this.args[0];
-            //this._addSubgenerator(this.templateName, this.options);
-            done();
-        } else {
-
-            var baseDir = this.sourceRoot();
-            var availableSubgenerators = this.getSubDirectories(baseDir  + '/../../')
-                .filter(function (x) {
-                    return x != 'app'
-                })
-                .map(function (x) {
-                    return {name: x, value: x}
-                });
-
-            var prompts = [{
-                type: 'list',
-                name: 'templateName',
-                message: 'What type of application do you want to create?',
-                choices: availableSubgenerators,
-                store: true
-            }];
-
-            this.prompt(prompts).then((answers) => {
-                //this._addSubgenerator(answers.templateName, this.options);
-                this.options['templateName'] = answers.templateName;
-                done();
-            });
+        if(!this.options[this._getSubgeneratorsParameterName()]) {
+            prompts.push(this._getSubgeneratorsPrompt());
         }
 
-        return done;
+        return this.prompt(prompts).then((answers) => {
+            if(answers[this._getSubgeneratorsParameterName()]) {
+                this.options[this._getSubgeneratorsParameterName()] = answers[this._getSubgeneratorsParameterName()];
+            }
+
+            var name = this.options[this._getSubgeneratorsParameterName()];
+            this.composeWith(require.resolve('../' + name), { arguments: this.args });
+        });
     }
 
-    _getSubDirectories(baseDir) {
-        return fs.readdirSync(baseDir)
+    _getSubgeneratorsParameterName() { return 'subGeneratorName'; }
+
+    _getSubgenerators() {
+
+        var baseDir = this.sourceRoot() + '/../../';
+
+        var availableSubgenerators = fs.readdirSync(baseDir)
             .filter(function (file) {
                 return fs.statSync(path.join(baseDir, file)).isDirectory();
+            })
+            .filter(function (x) {
+                return x != 'app'
+            })
+            .map(function (x) {
+                return {name: x, value: x}
             });
+
+        return availableSubgenerators;
     }
 
-    configuring() {
-        this._addSubgenerator(this.options['templateName'], this.options);
+    _getSubgeneratorsPrompt() {
+
+        var prompt = {
+            type: 'list',
+            name: this._getSubgeneratorsParameterName(),
+            message: 'What type of application do you want to create?',
+            choices: this._getSubgenerators(),
+            store: true
+        };
+
+        return prompt;
     }
 
-    _addSubgenerator(name, opts) {
-        this.log('composing with subgenerator: ' + name + ' and opts: ' + opts);
-        var z = { options: opts, arguments: this.timarguments };
-        this.composeWith(require.resolve('../' + name), z);
+    _addSubgenerator(name) {
+        this.composeWith(require.resolve('../' + name), { args: this.args });
     }
 };

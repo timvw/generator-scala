@@ -25,8 +25,6 @@ module.exports = class extends Generator {
     getApplicationNameParameterName() { return 'applicationName'; }
     getScalaVersionParameterName() { return 'scalaVersion'; }
 
-
-
     getScalaVersionPrompt() {
 
         const prompt = {
