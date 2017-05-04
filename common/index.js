@@ -33,7 +33,7 @@ module.exports = class extends Generator {
         });
     }
 
-    writing() {
+    _writeCommonFiles() {
         this.fs.copyTpl( this.templatePath('**/*'), this.destinationRoot(), this.options);
     }
 

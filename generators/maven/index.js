@@ -11,6 +11,7 @@ module.exports = class extends Common {
     }
 
     writing() {
+        this.fs.copyTpl( this.templatePath('../../../common/templates/**/*'), this.destinationRoot(), this.options);
         this.fs.copyTpl( this.templatePath('**/*'), this.destinationRoot(), this.options);
     }
 };
