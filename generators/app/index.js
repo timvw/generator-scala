@@ -26,7 +26,8 @@ module.exports = class extends Common {
             }
 
             var name = this.options[this._getSubgeneratorsParameterName()];
-            this.composeWith(require.resolve('../' + name), { arguments: this.args });
+            var remainingArgs = this.args.slice(1);
+            this.composeWith(require.resolve('../' + name), { arguments: remainingArgs });
         });
     }
 
@@ -61,9 +62,5 @@ module.exports = class extends Common {
         };
 
         return prompt;
-    }
-
-    _addSubgenerator(name) {
-        this.composeWith(require.resolve('../' + name), { args: this.args });
     }
 };
