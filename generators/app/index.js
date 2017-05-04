@@ -64,6 +64,6 @@ module.exports = class extends Common {
     }
 
     _addSubgenerator(name, opts) {
-
+        this.composeWith(require.resolve('../' + name, opts));
     }
 };
