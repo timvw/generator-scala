@@ -29,7 +29,7 @@ module.exports = class extends Generator {
 
         const prompt = {
             type: 'list',
-            name: 'scalaVersion',
+            name: this.getScalaVersionParameterName(),
             message: 'Which version of Scala do you want to use?',
             choices: [
                 {name: '2.10.4', value: '2.10.4'},
@@ -47,7 +47,7 @@ module.exports = class extends Generator {
     getApplicationNamePrompt() {
 
         const prompt = {
-            name: 'applicationName',
+            name: this.getApplicationNameParameterName(),
             message: 'What\'s the name of your application?',
             default: this.appname
         };
