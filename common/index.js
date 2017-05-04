@@ -9,6 +9,34 @@ module.exports = class extends Generator {
         super(args, opts);
     }
 
+    prompting() {
+
+        var prompts = [];
+
+        if(!this.options[this.getApplicationNameParameterName()]) {
+            prompts.push(this.getApplicationNamePrompt());
+        }
+
+        if(!this.options[this.getScalaVersionParameterName()]) {
+            prompts.push(this.getScalaVersionPrompt());
+        }
+
+        return this.prompt(prompts).then((answers) => {
+
+            if(answers[this.getApplicationNameParameterName()]) {
+                this.options[this.getApplicationNameParameterName()] = answers[this.getApplicationNameParameterName()];
+            }
+
+            if(answers[this.getScalaVersionParameterName()]) {
+                this.options[this.getScalaVersionParameterName()] = answers[this.getScalaVersionParameterName()];
+            }
+        });
+    }
+
+    writing() {
+        this.fs.copyTpl( this.templatePath('**/*'), this.destinationRoot(), this.options);
+    }
+
     getGreeting() {
         const greeting =
             "                          \r\n" +
