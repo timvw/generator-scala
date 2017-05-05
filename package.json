@@ -1,6 +1,6 @@
 {
   "name": "generator-scala",
-  "version": "0.55558.0",
+  "version": "0.55559.0",
   "description": "generate scala projects",
   "main": "generators/app/index.js",
   "repository": "timvw/generator-scala",
