@@ -10,6 +10,10 @@ module.exports = class extends Common {
         this.argument(this.getScalaVersionParameterName(), { type: String, required: false });
     }
 
+    prompting() {
+        this._prompting();
+    }
+
     writing() {
         this.fs.copyTpl( this.templatePath('../../../common/templates/**/*'), this.destinationRoot(), this.options);
         this.fs.copyTpl( this.templatePath('**/*'), this.destinationRoot(), this.options);

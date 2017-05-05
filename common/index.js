@@ -9,7 +9,7 @@ module.exports = class extends Generator {
         super(args, opts);
     }
 
-    prompting() {
+    _prompting() {
 
         var prompts = [];
 
