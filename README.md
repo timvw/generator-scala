@@ -34,10 +34,13 @@ Finally, initiate the generator:
 yo scala
 ```
 
+
+Currently we support 3 subgenerators (maven, sbt and gradle). Each of them accepts the appliation name (default: current directory name) and scala version (default: 2.12.1)
+
 In case you want to go fast, you can provide values for the requested parameters:
 
 ```bash
-yo scala emptysbt foo 2.11.8
+yo scala sbt foo 2.11.8
 ```
 
 
