@@ -11,7 +11,27 @@ module.exports = class extends Common {
     }
 
     prompting() {
-        this._prompting();
+
+        var prompts = [];
+
+        if(!this.options[this.getApplicationNameParameterName()]) {
+            prompts.push(this.getApplicationNamePrompt());
+        }
+
+        if(!this.options[this.getScalaVersionParameterName()]) {
+            prompts.push(this.getScalaVersionPrompt());
+        }
+
+        return this.prompt(prompts).then((answers) => {
+
+            if(answers[this.getApplicationNameParameterName()]) {
+                this.options[this.getApplicationNameParameterName()] = answers[this.getApplicationNameParameterName()];
+            }
+
+            if(answers[this.getScalaVersionParameterName()]) {
+                this.options[this.getScalaVersionParameterName()] = answers[this.getScalaVersionParameterName()];
+            }
+        });
     }
 
     writing() {
